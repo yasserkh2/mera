@@ -1,0 +1,28 @@
+{
+  "tasks": [
+    {
+      "id": "1746707111684",
+      "ts": 1746707304121,
+      "task": "we need to create git ignore",
+      "tokensIn": 110060,
+      "tokensOut": 600,
+      "cacheWrites": 0,
+      "cacheReads": 0,
+      "totalCost": 0.006526818,
+      "size": 2267042,
+      "shadowGitConfigWorkTree": "c:\\Users\\y.khira\\Downloads\\New folder (2)\\mera\\try_mera"
+    },
+    {
+      "id": "1746707314221",
+      "ts": 1746707333833,
+      "task": "i need to push",
+      "tokensIn": 28508,
+      "tokensOut": 243,
+      "cacheWrites": 0,
+      "cacheReads": 0,
+      "totalCost": 0.000584532,
+      "size": 6802,
+      "shadowGitConfigWorkTree": "c:\\Users\\y.khira\\Downloads\\New folder (2)\\mera\\try_mera"
+    }
+  ]
+}

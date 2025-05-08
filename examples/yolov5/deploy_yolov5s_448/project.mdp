@@ -1,0 +1,9 @@
+artifact_list:
+  IP:
+  - build/IP/compilation/mera.plan
+  mera2_dcfg:
+  - build/IP/deploy_cfg.json
+  model:
+  - model/input_desc.json
+compile_flow: MERA
+prj_version: 1

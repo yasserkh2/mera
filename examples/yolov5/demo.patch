@@ -1,0 +1,122 @@
+diff --git a/export.py b/export.py
+index 4cf30e34..ffc99560 100644
+--- a/export.py
++++ b/export.py
+@@ -202,8 +202,8 @@ def export_tflite(keras_model, im, file, int8, data, ncalib, prefix=colorstr('Te
+             converter.representative_dataset = lambda: representative_dataset_gen(dataset, ncalib)
+             converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+             converter.target_spec.supported_types = []
+-            converter.inference_input_type = tf.uint8  # or tf.int8
+-            converter.inference_output_type = tf.uint8  # or tf.int8
++            #converter.inference_input_type = tf.uint8  # or tf.int8
++            #converter.inference_output_type = tf.uint8  # or tf.int8
+             converter.experimental_new_quantizer = False
+             f = str(file).replace('.pt', '-int8.tflite')
+ 
+diff --git a/models/common.py b/models/common.py
+index 3930c8e7..59d5d0d1 100644
+--- a/models/common.py
++++ b/models/common.py
+@@ -39,7 +39,7 @@ class Conv(nn.Module):
+         super().__init__()
+         self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=False)
+         self.bn = nn.BatchNorm2d(c2)
+-        self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
++        self.act = nn.Hardswish() if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
+ 
+     def forward(self, x):
+         return self.act(self.bn(self.conv(x)))
+@@ -287,9 +287,9 @@ class DetectMultiBackend(nn.Module):
+         #   OpenCV DNN:             *.onnx with dnn=True
+         super().__init__()
+         w = str(weights[0] if isinstance(weights, list) else weights)
+-        suffix, suffixes = Path(w).suffix.lower(), ['.pt', '.onnx', '.tflite', '.pb', '', '.mlmodel']
++        suffix, suffixes = Path(w).suffix.lower(), ['.pt', '.onnx', '.tflite', '.pb', '', '.mlmodel', '.ip']
+         check_suffix(w, suffixes)  # check weights have acceptable suffix
+-        pt, onnx, tflite, pb, saved_model, coreml = (suffix == x for x in suffixes)  # backend booleans
++        pt, onnx, tflite, pb, saved_model, coreml, ip = (suffix == x for x in suffixes)  # backend booleans
+         jit = pt and 'torchscript' in w.lower()
+         stride, names = 64, [f'class{i}' for i in range(1000)]  # assign defaults
+ 
+@@ -317,6 +317,24 @@ class DetectMultiBackend(nn.Module):
+             check_requirements(('onnx', 'onnxruntime-gpu' if torch.has_cuda else 'onnxruntime'))
+             import onnxruntime
+             session = onnxruntime.InferenceSession(w, None)
++        elif ip:
++            import mera
++            import os
++
++            deployment_dir = os.path.splitext(w)[0]
++            ip_deployment = mera.load_mera_deployment(deployment_dir, target=mera.Target.IP)
++            iprt = ip_deployment.get_runner()
++
++            names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat',
++                     'traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat',
++                     'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'backpack',
++                     'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
++                     'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard', 'tennis racket', 'bottle',
++                     'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple', 'sandwich', 'orange',
++                     'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed',
++                     'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
++                     'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
++                     'hair drier', 'toothbrush']
+         else:  # TensorFlow model (TFLite, pb, saved_model)
+             import tensorflow as tf
+             if pb:  # https://www.tensorflow.org/guide/migrate#a_graphpb_or_graphpbtxt
+@@ -369,6 +387,13 @@ class DetectMultiBackend(nn.Module):
+                 y = self.net.forward()
+             else:  # ONNX Runtime
+                 y = self.session.run([self.session.get_outputs()[0].name], {self.session.get_inputs()[0].name: im})[0]
++        elif self.ip:
++            im = im.permute(0, 2, 3, 1).cpu().numpy()
++            y = self.iprt.set_input(im).run().get_outputs()[0]
++            y[..., 0] *= w  # x
++            y[..., 1] *= h  # y
++            y[..., 2] *= w  # w
++            y[..., 3] *= h  # h
+         else:  # TensorFlow model (TFLite, pb, saved_model)
+             im = im.permute(0, 2, 3, 1).cpu().numpy()  # torch BCHW to numpy BHWC shape(1,320,192,3)
+             if self.pb:
+diff --git a/requirements.txt b/requirements.txt
+index 22b51fc4..535c3fcb 100755
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -2,13 +2,13 @@
+ 
+ # Base ----------------------------------------
+ matplotlib>=3.2.2
+-numpy>=1.18.5
++numpy<1.24.0
+ opencv-python>=4.1.2
+-Pillow>=7.1.2
++Pillow<10.0.0
+ PyYAML>=5.3.1
+ requests>=2.23.0
+ scipy>=1.4.1
+-torch>=1.7.0
++torch==1.12.1
+ torchvision>=0.8.1
+ tqdm>=4.41.0
+ 
+@@ -25,7 +25,7 @@ seaborn>=0.11.0
+ # onnx>=1.9.0  # ONNX export
+ # onnx-simplifier>=0.3.6  # ONNX simplifier
+ # scikit-learn==0.19.2  # CoreML quantization
+-# tensorflow>=2.4.1  # TFLite export
++tensorflow==2.13.1  # TFLite export
+ # tensorflowjs>=3.9.0  # TF.js export
+ 
+ # Extras --------------------------------------
+diff --git a/utils/loss.py b/utils/loss.py
+index 194c8e50..32647db6 100644
+--- a/utils/loss.py
++++ b/utils/loss.py
+@@ -170,7 +170,7 @@ class ComputeLoss:
+         # Build targets for compute_loss(), input targets(image,class,x,y,w,h)
+         na, nt = self.na, targets.shape[0]  # number of anchors, targets
+         tcls, tbox, indices, anch = [], [], [], []
+-        gain = torch.ones(7, device=targets.device)  # normalized to gridspace gain
++        gain = torch.ones(7, device=targets.device).long()
+         ai = torch.arange(na, device=targets.device).float().view(na, 1).repeat(1, nt)  # same as .repeat_interleave(nt)
+         targets = torch.cat((targets.repeat(na, 1, 1), ai[:, :, None]), 2)  # append anchor indices
+ 

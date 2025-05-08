@@ -1,0 +1,13 @@
+artifact_list:
+  IP:
+  - build/IP/mera_cfg.json
+  - build/IP/build_config.yaml
+  - build/IP/result/deploy.params
+  - build/IP/result/deploy.json
+  - build/IP/result/deploy.so
+  metrics:
+  - build/IP/result/compile_metrics.json
+  model:
+  - model/input_desc.json
+compile_flow: TVM
+prj_version: 1

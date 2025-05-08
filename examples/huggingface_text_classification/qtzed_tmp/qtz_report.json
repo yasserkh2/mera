@@ -1,0 +1,78 @@
+{
+    "model_id": "qtzed_tmp",
+    "creation_time": "05/07/2025, 22:57:58",
+    "platform": "DNAA600L0003",
+    "calib_count": 30,
+    "eval_count": 0,
+    "transform_info": {
+        "QuantizedRatio": 3.9426164627075195,
+        "orig_num_params": 124764700.0,
+        "orig_param_size_bytes": 499058800.0,
+        "transformed_num_params": 85849492.0,
+        "transformed_param_size_bytes": 86930456.0,
+        "untransformed_num_params": 39081336.0,
+        "untransformed_param_size_bytes": 156325344.0
+    },
+    "quality_info": [],
+    "quantizer_config": {
+        "schema": 1,
+        "flow_version": 1,
+        "layer_conf": {},
+        "global_cfg": {
+            "conv_weights_cfg": {
+                "q_type": "S8",
+                "scheme": "SYMMETRIC",
+                "mode": "PER_CHANNEL",
+                "target": "WEIGHT",
+                "observer_type": "MIN_MAX",
+                "histogram_obs_n_bins": 2048,
+                "histogram_obs_upsample_rate": 128,
+                "per_channel_limit": -1,
+                "per_channel_grp_size": 32,
+                "use_symmetric_range": false
+            },
+            "conv_act_cfg": {
+                "q_type": "U7",
+                "scheme": "AFFINE",
+                "mode": "PER_TENSOR",
+                "target": "DATA",
+                "observer_type": "HISTOGRAM",
+                "histogram_obs_n_bins": 2048,
+                "histogram_obs_upsample_rate": 128,
+                "per_channel_limit": -1,
+                "per_channel_grp_size": 32,
+                "use_symmetric_range": false
+            },
+            "mm_weights_cfg": {
+                "q_type": "S8",
+                "scheme": "SYMMETRIC",
+                "mode": "PER_CHANNEL",
+                "target": "WEIGHT",
+                "observer_type": "MAX_ABS",
+                "histogram_obs_n_bins": 2048,
+                "histogram_obs_upsample_rate": 128,
+                "per_channel_limit": 32704,
+                "per_channel_grp_size": 32,
+                "use_symmetric_range": false
+            },
+            "mm_act_cfg": {
+                "q_type": "S8",
+                "scheme": "SYMMETRIC",
+                "mode": "PER_TENSOR",
+                "target": "DATA",
+                "observer_type": "MAX_ABS",
+                "histogram_obs_n_bins": 2048,
+                "histogram_obs_upsample_rate": 128,
+                "per_channel_limit": -1,
+                "per_channel_grp_size": 32,
+                "use_symmetric_range": false
+            }
+        },
+        "transform_cfg": {
+            "map_silu_to_hswish": true,
+            "fuse_domains_for_i8_concat": true,
+            "glu_bf16_outlier_threshold": 40.0,
+            "use_bf16_for_small_ch_conv": false
+        }
+    }
+}
