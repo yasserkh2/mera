@@ -14,14 +14,14 @@
     },
     {
       "id": "1746707314221",
-      "ts": 1746707333833,
+      "ts": 1746707407748,
       "task": "i need to push",
-      "tokensIn": 28508,
-      "tokensOut": 243,
+      "tokensIn": 359403,
+      "tokensOut": 1089,
       "cacheWrites": 0,
       "cacheReads": 0,
-      "totalCost": 0.000584532,
-      "size": 6802,
+      "totalCost": 0.012773454,
+      "size": 714091,
       "shadowGitConfigWorkTree": "c:\\Users\\y.khira\\Downloads\\New folder (2)\\mera\\try_mera"
     }
   ]

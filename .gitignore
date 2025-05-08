@@ -37,3 +37,18 @@ temp/
 bmc/
 initialize_sakura_ii/
 telemetry_sakura_ii/
+
+# Large files and datasets
+*.whl
+*.onnx
+*.tflite
+*.pt
+*.pth
+*.weights
+*.mera
+examples/**/datasets/
+examples/**/source_model_files/
+examples/**/source_model_quantized/
+
+# Documentation and examples
+examples/yolov*/yolov*/
