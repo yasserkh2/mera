@@ -1,54 +1,58 @@
-# Virtual Environment
-**/mera-env/
-**/venv/
+# Virtual Environments
+venv/
 env/
-.env/
+**/mera-env/
 
-# Dependencies
-node_modules/
-package-lock.json
-yarn.lock
-
-# Build outputs
-dist/
-build/
-*.pyc
+# Python
 __pycache__/
-*.o
-*.so
+*.pyc
 
-# IDE and editor files
-.idea/
+# IDE and Editor
 .vscode/
+.idea/
 *.swp
 *.swo
-.DS_Store
-Thumbs.db
 
-# Logs and temporary files
+# Node
+node_modules/
+yarn.lock
+package-lock.json
+
+# Logs and Temp
 *.log
 logs/
 tmp/
 temp/
-.env
-.env.local
 
-# Project specific
-bmc/
-initialize_sakura_ii/
-telemetry_sakura_ii/
+# Env files
+.env*
+*.env
 
-# Large files and datasets
-*.whl
+# Build
+build/
+dist/
+
+# Models and Artifacts
 *.onnx
-*.tflite
 *.pt
 *.pth
 *.weights
+*.tflite
 *.mera
+*.mdp
+*.json
+*.bin
+
+# Datasets and Sources
 examples/**/datasets/
 examples/**/source_model_files/
 examples/**/source_model_quantized/
 
-# Documentation and examples
-examples/yolov*/yolov*/
+# Platform-specific
+.DS_Store
+Thumbs.db
+
+# Project specific folders
+bmc/
+initialize_sakura_ii/
+telemetry_sakura_ii/

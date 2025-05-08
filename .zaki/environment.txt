@@ -10,7 +10,7 @@ Total Memory: 16GB
 Free Memory: 3GB
 CPU Cores: 12
 
-Current Time: 5/8/2025, 3:28:34 PM (Africa/Cairo, UTC+3:00)
+Current Time: 5/8/2025, 3:31:31 PM (Africa/Cairo, UTC+3:00)
 
 # EDITOR STATE
 
@@ -35,6 +35,12 @@ Files:
   install_mera/
   RELEASE_NOTES.md
   telemetry_sakura_ii/
+  initialize_sakura_ii/dma_test
+  initialize_sakura_ii/driver/
+  initialize_sakura_ii/ec_daemon
+  initialize_sakura_ii/README.md
+  initialize_sakura_ii/setup.sh
+  initialize_sakura_ii/setup_none.sh
   examples/chatbot/
   examples/detr/
   examples/eci.svg
@@ -65,12 +71,6 @@ Files:
   install_mera/mera_visualizer-2.3.0-py3-none-any.whl
   install_mera/README.md
   install_mera/start.sh
-  initialize_sakura_ii/dma_test
-  initialize_sakura_ii/driver/
-  initialize_sakura_ii/ec_daemon
-  initialize_sakura_ii/README.md
-  initialize_sakura_ii/setup.sh
-  initialize_sakura_ii/setup_none.sh
   telemetry_sakura_ii/README.md
   telemetry_sakura_ii/sakura_ii_telemetry_2025-04-09_14-07-09.log
   telemetry_sakura_ii/sakura_ii_telemetry_2025-04-09_14-13-14.log
@@ -95,11 +95,41 @@ Files:
   telemetry_sakura_ii/sakura_ii_telemetry_2025-05-07_18-35-19.log
   telemetry_sakura_ii/sakura_ii_telemetry_2025-05-07_18-35-38.log
   telemetry_sakura_ii/telemetry
+  initialize_sakura_ii/driver/.Module.symvers.cmd
+  initialize_sakura_ii/driver/.modules.order.cmd
+  initialize_sakura_ii/driver/.pcie_sakura.ko.cmd
+  initialize_sakura_ii/driver/.pcie_sakura.mod.cmd
+  initialize_sakura_ii/driver/.pcie_sakura.mod.o.cmd
+  initialize_sakura_ii/driver/.pcie_sakura.o.cmd
+  initialize_sakura_ii/driver/.usd_pcie.o.cmd
+  initialize_sakura_ii/driver/Makefile
+  initialize_sakura_ii/driver/Module.symvers
+  initialize_sakura_ii/driver/modules.order
+  initialize_sakura_ii/driver/pcieioctl.h
+  initialize_sakura_ii/driver/pcie_sakura.ko
+  initialize_sakura_ii/driver/pcie_sakura.mod
+  initialize_sakura_ii/driver/pcie_sakura.mod.c
+  initialize_sakura_ii/driver/pcie_sakura.mod.o
+  initialize_sakura_ii/driver/pcie_sakura.o
+  initialize_sakura_ii/driver/sim_usd_pcie.c
+  initialize_sakura_ii/driver/usd_pcie.c
+  initialize_sakura_ii/driver/usd_pcie.h
+  initialize_sakura_ii/driver/usd_pcie.o
   examples/chatbot/173_smollm2-1.7b-instruct-tk256/
   examples/chatbot/demo_model.py
   examples/chatbot/install_mera/
   examples/chatbot/result.png
   examples/chatbot/utils/
+  examples/detr/data/
+  examples/detr/demo_model.py
+  examples/detr/deploy.py
+  examples/detr/deploy_detr/
+  examples/detr/export_detr.py
+  examples/detr/README.md
+  examples/detr/result-67f6b72e.png
+  examples/detr/result.png
+  examples/detr/run.sh
+  examples/detr/source_model_files/
   examples/huggingface_image_classification/data/
   examples/huggingface_image_classification/demo_model.py
   examples/huggingface_image_classification/deploy.py
@@ -111,16 +141,6 @@ Files:
   examples/huggingface_image_classification/result.png
   examples/huggingface_image_classification/run.sh
   examples/huggingface_image_classification/source_model_files/
-  examples/detr/data/
-  examples/detr/demo_model.py
-  examples/detr/deploy.py
-  examples/detr/deploy_detr/
-  examples/detr/export_detr.py
-  examples/detr/README.md
-  examples/detr/result-67f6b72e.png
-  examples/detr/result.png
-  examples/detr/run.sh
-  examples/detr/source_model_files/
   examples/efficient_net_demo/cat.png
   examples/efficient_net_demo/demo_model.py
   examples/efficient_net_demo/deploy.py
@@ -131,16 +151,6 @@ Files:
   examples/efficient_net_demo/result.png
   examples/efficient_net_demo/run.sh
   examples/efficient_net_demo/source_model_files/
-  examples/huggingface_text_gen/demo_model.py
-  examples/huggingface_text_gen/deploy.py
-  examples/huggingface_text_gen/deploy_SmolLM2-135M-Instruct/
-  examples/huggingface_text_gen/qtzed_tmp/
-  examples/huggingface_text_gen/quantize_model.py
-  examples/huggingface_text_gen/README.md
-  examples/huggingface_text_gen/result-67f6b72e.png
-  examples/huggingface_text_gen/result.png
-  examples/huggingface_text_gen/run.sh
-  examples/huggingface_text_gen/source_model_files/
   examples/huggingface_image_segmentation/data/
   examples/huggingface_image_segmentation/demo_model.py
   examples/huggingface_image_segmentation/deploy.py
@@ -150,11 +160,6 @@ Files:
   examples/huggingface_image_segmentation/result.png
   examples/huggingface_image_segmentation/run.sh
   examples/huggingface_image_segmentation/source_model_files/
-  examples/measure_latency/latencies.csv
-  examples/measure_latency/measure.py
-  examples/measure_latency/README.md
-  examples/others/mera-visualizer-guide/
-  examples/others/README.md
   examples/huggingface_text_classification/demo_model.py
   examples/huggingface_text_classification/deploy.py
   examples/huggingface_text_classification/deploy_roberta-base-go_emotions/
@@ -165,6 +170,21 @@ Files:
   examples/huggingface_text_classification/result.png
   examples/huggingface_text_classification/run.sh
   examples/huggingface_text_classification/source_model_files/
+  examples/huggingface_text_gen/demo_model.py
+  examples/huggingface_text_gen/deploy.py
+  examples/huggingface_text_gen/deploy_SmolLM2-135M-Instruct/
+  examples/huggingface_text_gen/qtzed_tmp/
+  examples/huggingface_text_gen/quantize_model.py
+  examples/huggingface_text_gen/README.md
+  examples/huggingface_text_gen/result-67f6b72e.png
+  examples/huggingface_text_gen/result.png
+  examples/huggingface_text_gen/run.sh
+  examples/huggingface_text_gen/source_model_files/
+  examples/measure_latency/latencies.csv
+  examples/measure_latency/measure.py
+  examples/measure_latency/README.md
+  examples/others/mera-visualizer-guide/
+  examples/others/README.md
   examples/resnet50/.gitignore
   examples/resnet50/data/
   examples/resnet50/demo_model.py
@@ -207,25 +227,5 @@ Files:
   install_mera/mera-env/include/
   install_mera/mera-env/lib/
   install_mera/mera-env/lib64/
-  install_mera/mera-env/pyvenv.cfg
-  install_mera/mera-env/share/
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/config.json
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/generation_config.json
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/mera.json
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/mera_deployment/
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/merges.txt
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/special_tokens_map.json
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/tokenizer.json
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/tokenizer_config.json
-  examples/chatbot/173_smollm2-1.7b-instruct-tk256/vocab.json
-  examples/chatbot/install_mera/create_virtual_env.sh
-  examples/chatbot/install_mera/install_mera_and_python_dependencies.sh
-  examples/chatbot/install_mera/install_mera_models_and_python_dependencies.sh
-  examples/chatbot/install_mera/install_mera_visualizer_and_python_dependencies.sh
-  examples/chatbot/install_mera/install_os_dependencies.sh
-  examples/chatbot/install_mera/mera-2.2.0-cp310-cp310-manylinux_2_27_x86_64.whl
-  examples/chatbot/install_mera/mera2_runtime-2.2.0-cp310-cp310-manylinux_2_27_x86_64.whl
-  examples/chatbot/install_mera/mera_models-2.2.0-py3-none-any.whl
-  examples/chatbot/install_mera/mera_tvm_full-2.2.0-cp310-cp310-manylinux_2_27_x86_64.whl
 
 (Showing first 200 files. Use list_files tool for complete view)
